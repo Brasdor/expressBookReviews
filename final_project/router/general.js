@@ -43,7 +43,7 @@ function hashPassword(password) {
 // Route: Get the list of available books
 public_users.get('/', function (req, res) {
   // Retrieve the list of available books from the database or any other source
-  const availableBooks = books.filter(book => book.available);
+  const availableBooks = Object.values(books.books); // Convert books object to an array
 
   // Check if there are available books
   if (availableBooks.length === 0) {
@@ -60,7 +60,7 @@ public_users.get('/isbn/:isbn', function (req, res) {
   const isbn = req.params.isbn;
 
   // Implement logic to fetch and return book details for the specified ISBN
-  const book = books.getBookByISBN(isbn); // Assuming a function getBookByISBN() is defined in booksdb.js to fetch book details by ISBN
+  const book = books.getBookByISBN(isbn);
 
   if (book) {
     return res.status(200).json(book);
@@ -75,7 +75,7 @@ public_users.get('/author/:author', function (req, res) {
   const author = req.params.author;
 
   // Implement logic to fetch and return book details for the specified author
-  const booksByAuthor = books.getBooksByAuthor(author); // Assuming a function getBooksByAuthor() is defined in booksdb.js to fetch books by author
+  const booksByAuthor = books.getBooksByAuthor(author);
 
   if (booksByAuthor.length > 0) {
     return res.status(200).json(booksByAuthor);
@@ -90,7 +90,7 @@ public_users.get('/title/:title', function (req, res) {
   const title = req.params.title;
 
   // Implement logic to fetch and return book details for the specified title
-  const booksWithTitle = books.getBooksByTitle(title); // Assuming a function getBooksByTitle() is defined in booksdb.js to fetch books by title
+  const booksWithTitle = books.getBooksByTitle(title);
 
   if (booksWithTitle.length > 0) {
     return res.status(200).json(booksWithTitle);
@@ -105,9 +105,9 @@ public_users.get('/review/:isbn', function (req, res) {
   const isbn = req.params.isbn;
 
   // Implement logic to fetch and return book review for the specified ISBN
-  const bookReview = books.getBookReviewByISBN(isbn); // Assuming a function getBookReviewByISBN() is defined in booksdb.js to fetch book review by ISBN
+  const bookReview = books.getBookReviewByISBN(isbn);
 
-  if (bookReview) {
+  if (bookReview && Object.keys(bookReview).length > 0) {
     return res.status(200).json({ review: bookReview });
   } else {
     return res.status(404).json({ message: "Review for this book not found" });
